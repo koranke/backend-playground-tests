@@ -1,0 +1,25 @@
+package org.example.backendPlayground.api;
+
+import org.example.backendPlayground.domain.PaginatedUserResponse;
+import org.example.backendPlayground.domain.User;
+import org.example.core.api.CreateApi;
+import org.example.core.api.GetByIdApi;
+import org.example.core.api.GetPaginatedAllApi;
+import org.example.core.configuration.Configuration;
+
+public class UserService {
+	private static final String BASE_URL = Configuration.BASE_USER_SERVICE_URL + "users";
+
+	public static CreateApi<User> create() {
+		return new CreateApi<>(BASE_URL, User.class);
+	}
+
+	public static GetByIdApi<User> getById() {
+		return new GetByIdApi<>(BASE_URL, User.class);
+	}
+
+	public static GetPaginatedAllApi<PaginatedUserResponse> getAll() {
+		return new GetPaginatedAllApi<>(BASE_URL, PaginatedUserResponse.class);
+	}
+
+}
