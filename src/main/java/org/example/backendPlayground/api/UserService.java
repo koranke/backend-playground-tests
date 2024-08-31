@@ -10,12 +10,12 @@ import org.example.core.configuration.Configuration;
 public class UserService {
 	private static final String BASE_URL = Configuration.BASE_USER_SERVICE_URL + "users";
 
-	public static CreateApi<User> create() {
-		return new CreateApi<>(BASE_URL, User.class);
+	public static CreateApi<User> create(User user) {
+		return new CreateApi<User>(BASE_URL, User.class).withBody(user);
 	}
 
-	public static GetByIdApi<User> getById() {
-		return new GetByIdApi<>(BASE_URL, User.class);
+	public static GetByIdApi<User> getById(Long id) {
+		return new GetByIdApi<User>(BASE_URL, User.class).withId(id);
 	}
 
 	public static GetPaginatedAllApi<PaginatedUserResponse> getAll() {

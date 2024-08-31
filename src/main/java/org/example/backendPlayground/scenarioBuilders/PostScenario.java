@@ -29,7 +29,7 @@ public class PostScenario extends ScenarioCore {
 		withDefaults();
 		assert this.userId != null : "User ID is required to create a post";
 
-		Post post = PostService.create().call(this.userId.toString(), getAsPost());
+		Post post = PostService.create(this.userId, getAsPost()).call();
 		this.postId = post.getId();
 		return this;
 	}

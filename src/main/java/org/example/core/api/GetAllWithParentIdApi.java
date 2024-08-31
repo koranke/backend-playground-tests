@@ -7,26 +7,29 @@ import java.util.List;
 
 public class GetAllWithParentIdApi<T> extends ApiBase<GetAllWithParentIdApi<T>> {
 	private final Type resultType;
+	private String parentId;
+
+	public GetAllWithParentIdApi<T> withParentId(String parentId) {
+		this.parentId = parentId;
+		return this;
+	}
 
 	public GetAllWithParentIdApi(String baseUrl, Type type) {
 		this.baseUrl = baseUrl;
 		this.resultType = type;
 	}
 
-	public List<T> call(String id) {
-		if (id != null && !id.isEmpty()) {
-			baseUrl = String.format(baseUrl, id);
-		}
-		return tryCall(id)
+	public List<T> call() {
+		return tryCall()
 			.then()
 			.statusCode(200)
 			.extract()
 			.as(resultType);
 	}
 
-	public Response tryCall(String id) {
-		if (id != null && !id.isEmpty()) {
-			baseUrl = String.format(baseUrl, id);
+	public Response tryCall() {
+		if (parentId != null && !parentId.isEmpty()) {
+			baseUrl = String.format(baseUrl, parentId);
 		}
 		return get("");
 	}

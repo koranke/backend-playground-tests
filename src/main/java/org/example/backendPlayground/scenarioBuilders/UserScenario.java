@@ -41,7 +41,7 @@ public class UserScenario extends ScenarioCore {
 
 	public UserScenario create() {
 		withDefaults();
-		User user = UserService.create().call(getAsUser());
+		User user = UserService.create(getAsUser()).call();
 		this.id = user.getId();
 
 		if (postScenarios != null) {
