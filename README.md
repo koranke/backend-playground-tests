@@ -8,4 +8,8 @@ GitHub Actions, it also demonstrates different patterns for handling API testing
 
 To run tests locally, first check out the Backend Playground project and follow instructions there to build and deploy to Docker.
 You will need to also add environment variables for the desired DB_USER and DB_PASSWORD values.  Once the application is deployed,
-you can run these tests directly in your IDE.
+you can run these tests directly in your IDE, or through the command line using the following command:
+
+```shell
+mvn clean test
+```
