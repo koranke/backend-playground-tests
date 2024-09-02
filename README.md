@@ -1,4 +1,7 @@
 # BACKEND PLAYGROUND TESTS
+
+[![Build](https://github.com/koranke/backend-playground-tests/actions/workflows/build.yml/badge.svg)](https://github.com/koranke/backend-playground-tests/actions/workflows/build.yml)
+
 This is a companion project to the [Backend Playground](https://github.com/koranke/backend-playground) project. 
 It contains system-level tests for the backend playground project, which can be triggered by a CI/CD pipeline for
 automated inclusion of typical QA testing of backend services.
