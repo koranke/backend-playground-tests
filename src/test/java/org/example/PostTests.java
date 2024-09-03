@@ -45,7 +45,7 @@ public class PostTests extends TestBase {
 		PostService.create(userId, userPost).tryCall()
 				.then()
 				.statusCode(400)
-				.body(equalTo("Invalid request body: JSON parse error: Cannot deserialize value of type `com.example.backendPlayground.enums.PostVisibility` from String \"INVALID_VISIBILITY\": not one of the values accepted for Enum class: [PUBLIC, PRIVATE, SHARED]"));
+				.body(equalTo("Invalid value for PostVisibility: INVALID_VISIBILITY"));
 	}
 
 	@Test

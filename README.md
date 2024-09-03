@@ -16,3 +16,13 @@ you can run these tests directly in your IDE, or through the command line using 
 ```shell
 mvn clean test
 ```
+
+## Features
+* TestNG for test execution and reporting.
+* Logging with Log4j.  Each run generates a new log file in the `logs` directory.  Prior logs are archived.
+Logs older than 3 days are automatically cleaned up.
+* Configuration management with the "Owner" library.  This library allows for easy reference and management of configuration properties.
+* Database access with MyBatis, including Db classes for grouping database access methods per data entity.
+* API wrapper classes for easy, flexible access to API endpoints.  Includes "call" and "tryCall" variations for each endpoint,
+allowing for simpler calling of endpoints expected to succeed and more complex handling of endpoints that may return errors.
+* Data scenario classes for easy setup of test data and verification of expected results.
