@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class Post {
+public class Post extends BaseDomain {
 	private Long id;
 	private Long userId;
 	private String title;

@@ -7,20 +7,19 @@ import java.util.List;
 
 public class GetAllApi<T> extends ApiBase<GetAllApi<T>> {
 	private final Type resultType;
+	private String parentId;
+
+	public GetAllApi<T> withParentId(Long parentId) {
+		this.parentId = parentId.toString();
+		return this;
+	}
 
 	public GetAllApi(String baseUrl, Type type) {
 		this.baseUrl = baseUrl;
 		this.resultType = type;
 	}
 
-//	public List<T> call() {
-//		return call("");
-//	}
-
 	public List<T> call() {
-//		if (id != null && !id.isEmpty()) {
-//			baseUrl = String.format(baseUrl, id);
-//		}
 		return tryCall()
 			.then()
 			.statusCode(200)
@@ -29,14 +28,10 @@ public class GetAllApi<T> extends ApiBase<GetAllApi<T>> {
 	}
 
 	public Response tryCall() {
+		if (parentId != null && !parentId.isEmpty()) {
+			baseUrl = String.format(baseUrl, parentId);
+		}
 		return get("");
 	}
-
-//	public Response tryCall(String id) {
-//		if (id != null && !id.isEmpty()) {
-//			baseUrl = String.format(baseUrl, id);
-//		}
-//		return get("");
-//	}
 
 }

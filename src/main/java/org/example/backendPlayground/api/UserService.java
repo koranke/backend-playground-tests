@@ -3,8 +3,10 @@ package org.example.backendPlayground.api;
 import org.example.backendPlayground.domain.PaginatedUserResponse;
 import org.example.backendPlayground.domain.User;
 import org.example.core.api.CreateApi;
+import org.example.core.api.DeleteApi;
 import org.example.core.api.GetByIdApi;
 import org.example.core.api.GetPaginatedAllApi;
+import org.example.core.api.UpdateApi;
 import org.example.core.configuration.Configuration;
 
 public class UserService {
@@ -20,6 +22,14 @@ public class UserService {
 
 	public static GetPaginatedAllApi<PaginatedUserResponse> getAll() {
 		return new GetPaginatedAllApi<>(BASE_URL, PaginatedUserResponse.class);
+	}
+
+	public static UpdateApi<User> update(Long id, User user) {
+		return new UpdateApi<User>(BASE_URL, User.class).withId(id).withBody(user);
+	}
+
+	public static DeleteApi delete(Long id) {
+		return new DeleteApi(BASE_URL).withId(id);
 	}
 
 }

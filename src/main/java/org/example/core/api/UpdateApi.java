@@ -3,23 +3,34 @@ package org.example.core.api;
 import io.restassured.response.Response;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
-public class GetAllWithParentIdApi<T> extends ApiBase<GetAllWithParentIdApi<T>> {
+public class UpdateApi<T> extends ApiBase<UpdateApi<T>> {
 	private final Type resultType;
+	private String id;
 	private String parentId;
+	private Object body;
 
-	public GetAllWithParentIdApi<T> withParentId(String parentId) {
-		this.parentId = parentId;
+	public UpdateApi<T> withBody(Object body) {
+		this.body = body;
 		return this;
 	}
 
-	public GetAllWithParentIdApi(String baseUrl, Type type) {
+	public UpdateApi<T> withParentId(Long parentId) {
+		this.parentId = parentId.toString();
+		return this;
+	}
+
+	public UpdateApi<T> withId(Long id) {
+		this.id = id.toString();
+		return this;
+	}
+
+	public UpdateApi(String baseUrl, Type type) {
 		this.baseUrl = baseUrl;
 		this.resultType = type;
 	}
 
-	public List<T> call() {
+	public T call() {
 		return tryCall()
 			.then()
 			.statusCode(200)
@@ -31,7 +42,6 @@ public class GetAllWithParentIdApi<T> extends ApiBase<GetAllWithParentIdApi<T>> 
 		if (parentId != null && !parentId.isEmpty()) {
 			baseUrl = String.format(baseUrl, parentId);
 		}
-		return get("");
+		return put(id, body);
 	}
-
 }

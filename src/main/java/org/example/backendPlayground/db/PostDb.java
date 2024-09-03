@@ -18,7 +18,6 @@ public class PostDb {
 	public static Post getById(long id) {
 		try (SqlSession session = DbSession.getSession()) {
 			Post post = session.getMapper(PostMapper.class).getById(id);
-			assert post != null : "Post with id " + id + " not found.";
 			return post;
 		}
 	}

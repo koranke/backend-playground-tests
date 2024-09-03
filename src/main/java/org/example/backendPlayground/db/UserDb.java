@@ -17,9 +17,7 @@ public class UserDb {
 
 	public static User getById(long id) {
 		try (SqlSession session = DbSession.getSession()) {
-			User user = session.getMapper(UserMapper.class).getById(id);
-			assert user != null : "User with id " + id + " not found.";
-			return user;
+			return session.getMapper(UserMapper.class).getById(id);
 		}
 	}
 

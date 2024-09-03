@@ -2,40 +2,40 @@ package org.example.core.api;
 
 import io.restassured.response.Response;
 
-import java.lang.reflect.Type;
-
-public class GetByIdApi<T> extends ApiBase<GetByIdApi<T>> {
-	private final Type resultType;
+public class DeleteApi extends ApiBase<DeleteApi> {
 	private String parentId;
 	private String id;
 
-	public GetByIdApi<T> withParentId(Long parentId) {
+	public DeleteApi withParentId(Long parentId) {
 		this.parentId = parentId.toString();
 		return this;
 	}
 
-	public GetByIdApi<T> withId(Long id) {
+	public DeleteApi withId(Long id) {
 		this.id = id.toString();
 		return this;
 	}
 
-	public GetByIdApi(String baseUrl, Type type) {
-		this.baseUrl = baseUrl;
-		this.resultType = type;
+	public DeleteApi withId(String id) {
+		this.id = id;
+		return this;
 	}
 
-	public T call() {
+	public DeleteApi(String baseUrl) {
+		this.baseUrl = baseUrl;
+	}
+
+	public Response call() {
 		return tryCall()
 			.then()
 			.statusCode(200)
-			.extract()
-			.as(resultType);
+			.extract().response();
 	}
 
 	public Response tryCall() {
 		if (parentId != null && !parentId.isEmpty()) {
 			baseUrl = String.format(baseUrl, parentId);
 		}
-		return get(id);
+		return delete(id);
 	}
 }

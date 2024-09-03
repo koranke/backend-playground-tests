@@ -60,33 +60,25 @@ public class ApiBase<T> {
 
 	protected Response get(String endpoint) {
 		configureClient();
-		if (endpoint != null && !endpoint.isEmpty() && !endpoint.startsWith("/")) {
-			endpoint = "/" + endpoint;
-		}
+		endpoint = formatEndpoint(endpoint);
 		return requestSpecification.get(baseUrl + endpoint);
 	}
 
 	protected Response post(String endpoint, Object body) {
-		String bodyString = new Gson().toJson(body);
-		return post(endpoint, bodyString);
-	}
-
-	protected Response post(String endpoint, String body) {
+		String bodyString = getBodyString(body);
 		configureClient();
-		return requestSpecification.body(body).post(baseUrl + endpoint);
+		return requestSpecification.body(bodyString).post(baseUrl + endpoint);
 	}
 
 	protected Response put(String endpoint, Object body) {
-		String bodyString = new Gson().toJson(body);
-		return put(endpoint, bodyString);
-	}
-
-	protected Response put(String endpoint, String body) {
+		endpoint = formatEndpoint(endpoint);
+		String bodyString = getBodyString(body);
 		configureClient();
-		return requestSpecification.body(body).put(baseUrl + endpoint);
+		return requestSpecification.body(bodyString).put(baseUrl + endpoint);
 	}
 
 	protected Response delete(String endpoint) {
+		endpoint = formatEndpoint(endpoint);
 		configureClient();
 		return requestSpecification.delete(baseUrl + endpoint);
 	}
@@ -124,5 +116,23 @@ public class ApiBase<T> {
 		}
 	}
 
+	private static String formatEndpoint(String endpoint) {
+		if (endpoint != null && !endpoint.isEmpty() && !endpoint.startsWith("/")) {
+			endpoint = "/" + endpoint;
+		}
+		return endpoint;
+	}
+
+	private static String getBodyString(Object body) {
+		String bodyString = null;
+		if (body != null) {
+			if (body instanceof String) {
+				bodyString = (String) body;
+			} else {
+				bodyString = new Gson().toJson(body);
+			}
+		}
+		return bodyString;
+	}
 
 }
