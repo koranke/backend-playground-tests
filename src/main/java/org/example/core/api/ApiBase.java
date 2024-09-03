@@ -117,7 +117,10 @@ public class ApiBase<T> {
 	}
 
 	private static String formatEndpoint(String endpoint) {
-		if (endpoint != null && !endpoint.isEmpty() && !endpoint.startsWith("/")) {
+		if (endpoint == null) {
+			endpoint = "";
+		}
+		if (!endpoint.isEmpty() && !endpoint.startsWith("/")) {
 			endpoint = "/" + endpoint;
 		}
 		return endpoint;

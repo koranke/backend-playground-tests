@@ -4,8 +4,7 @@ import org.example.backendPlayground.domain.PaginatedUserResponse;
 import org.example.backendPlayground.domain.User;
 import org.example.core.api.CreateApi;
 import org.example.core.api.DeleteApi;
-import org.example.core.api.GetByIdApi;
-import org.example.core.api.GetPaginatedAllApi;
+import org.example.core.api.GetSingleApi;
 import org.example.core.api.UpdateApi;
 import org.example.core.configuration.Configuration;
 
@@ -16,12 +15,12 @@ public class UserService {
 		return new CreateApi<User>(BASE_URL, User.class).withBody(user);
 	}
 
-	public static GetByIdApi<User> getById(Long id) {
-		return new GetByIdApi<User>(BASE_URL, User.class).withId(id);
+	public static GetSingleApi<User> getById(Long id) {
+		return new GetSingleApi<User>(BASE_URL, User.class).withId(id);
 	}
 
-	public static GetPaginatedAllApi<PaginatedUserResponse> getAll() {
-		return new GetPaginatedAllApi<>(BASE_URL, PaginatedUserResponse.class);
+	public static GetSingleApi<PaginatedUserResponse> getAll() {
+		return new GetSingleApi<>(BASE_URL, PaginatedUserResponse.class);
 	}
 
 	public static UpdateApi<User> update(Long id, User user) {

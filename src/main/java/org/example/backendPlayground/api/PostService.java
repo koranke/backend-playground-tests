@@ -5,7 +5,7 @@ import org.example.backendPlayground.domain.Post;
 import org.example.core.api.CreateApi;
 import org.example.core.api.DeleteApi;
 import org.example.core.api.GetAllApi;
-import org.example.core.api.GetByIdApi;
+import org.example.core.api.GetSingleApi;
 import org.example.core.api.UpdateApi;
 import org.example.core.configuration.Configuration;
 
@@ -19,8 +19,8 @@ public class PostService {
 		return new CreateApi<Post>(BASE_URL, Post.class).withBody(post).withParentId(userId);
 	}
 
-	public static GetByIdApi<Post> getById(Long id) {
-		return new GetByIdApi<Post>(DIRECT_BASE_URL, Post.class).withId(id);
+	public static GetSingleApi<Post> getById(Long id) {
+		return new GetSingleApi<Post>(DIRECT_BASE_URL, Post.class).withId(id);
 	}
 
 	public static GetAllApi<Post> getAllForUser(Long userId) {

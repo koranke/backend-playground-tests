@@ -4,22 +4,22 @@ import io.restassured.response.Response;
 
 import java.lang.reflect.Type;
 
-public class GetByIdApi<T> extends ApiBase<GetByIdApi<T>> {
+public class GetSingleApi<T> extends ApiBase<GetSingleApi<T>> {
 	private final Type resultType;
 	private String parentId;
 	private String id;
 
-	public GetByIdApi<T> withParentId(Long parentId) {
+	public GetSingleApi<T> withParentId(Long parentId) {
 		this.parentId = parentId.toString();
 		return this;
 	}
 
-	public GetByIdApi<T> withId(Long id) {
+	public GetSingleApi<T> withId(Long id) {
 		this.id = id.toString();
 		return this;
 	}
 
-	public GetByIdApi(String baseUrl, Type type) {
+	public GetSingleApi(String baseUrl, Type type) {
 		this.baseUrl = baseUrl;
 		this.resultType = type;
 	}
