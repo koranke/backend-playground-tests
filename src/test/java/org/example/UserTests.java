@@ -28,7 +28,9 @@ public class UserTests extends TestBase {
 		User user = UserService.getById(userScenario.getId()).call();
 
 		// VERIFY
-		assertThat(user).isEqualTo(userScenario.getAsUser());
+		assertThat(user)
+				.usingRecursiveComparison()
+				.isEqualTo(userScenario.getAsUser());
 	}
 
 	@Test
@@ -68,7 +70,9 @@ public class UserTests extends TestBase {
 
 		// VERIFY
 		User savedUser = UserDb.getById(userScenario.getId());
-		assertThat(savedUser).isEqualTo(userScenario.getAsUser());
+		assertThat(savedUser)
+				.usingRecursiveComparison()
+				.isEqualTo(userScenario.getAsUser());
 	}
 
 	@DataProvider(name = "MissingRequiredFieldScenarios")
@@ -139,7 +143,9 @@ public class UserTests extends TestBase {
 		User updatedUser = UserService.update(userScenario.getId(), user).call();
 
 		// VERIFY
-		assertThat(updatedUser).isEqualTo(user);
+		assertThat(updatedUser)
+				.usingRecursiveComparison()
+				.isEqualTo(user);
 	}
 
 	@Test
