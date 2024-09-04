@@ -1,5 +1,6 @@
 package org.example.core.api;
 
+import io.qameta.allure.restassured.AllureRestAssured;
 import org.example.enums.AuthType;
 import com.google.gson.Gson;
 import io.restassured.response.Response;
@@ -85,9 +86,12 @@ public abstract class ApiBase<T> {
 
 	private void configureClient() {
 		requestSpecification = io.restassured.RestAssured.given();
-		requestSpecification.filters(new io.restassured.filter.log.RequestLoggingFilter(),
+		requestSpecification.filters(
+				new io.restassured.filter.log.RequestLoggingFilter(),
 				new io.restassured.filter.log.ResponseLoggingFilter(),
-				new io.restassured.filter.log.ErrorLoggingFilter());
+				new io.restassured.filter.log.ErrorLoggingFilter(),
+				new AllureRestAssured()
+		);
 		requestSpecification.baseUri(baseUrl);
 		if (authorization != null) {
 			configureAuthorization();
