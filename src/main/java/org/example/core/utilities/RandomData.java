@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class RandomData {
+public final class RandomData {
 	public static Faker en = new Faker();
 	public static Faker jp = new Faker(new Locale("ja"));
+
+	private RandomData() { }
 
 	public static String getRandomString(int length) {
 		return en.regexify(String.format("[a-zA-Z0-9]{%d}", length));

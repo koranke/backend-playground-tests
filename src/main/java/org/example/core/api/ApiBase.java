@@ -7,7 +7,7 @@ import io.restassured.specification.RequestSpecification;
 
 import java.util.Map;
 
-public class ApiBase<T> {
+public abstract class ApiBase<T> {
 	private RequestSpecification requestSpecification;
 	protected String baseUrl;
 	protected String contentType = "application/json; charset=UTF-8";

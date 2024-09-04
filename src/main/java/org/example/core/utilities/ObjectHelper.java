@@ -5,8 +5,10 @@ import com.rits.cloning.Cloner;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObjectHelper {
+public final class ObjectHelper {
     private static final Cloner cloner = new Cloner();
+
+    private ObjectHelper() { }
 
     public static <T> T clone(T object) {
         return cloner.deepClone(object);
