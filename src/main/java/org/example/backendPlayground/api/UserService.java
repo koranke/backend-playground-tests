@@ -8,8 +8,10 @@ import org.example.core.api.GetSingleApi;
 import org.example.core.api.UpdateApi;
 import org.example.core.configuration.Configuration;
 
-public class UserService {
+public final class UserService {
 	private static final String BASE_URL = Configuration.BASE_USER_SERVICE_URL + "users";
+
+	private UserService() {	}
 
 	public static CreateApi<User> create(User user) {
 		return new CreateApi<User>(BASE_URL, User.class).withBody(user);

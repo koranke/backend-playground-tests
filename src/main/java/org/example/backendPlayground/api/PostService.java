@@ -11,9 +11,11 @@ import org.example.core.configuration.Configuration;
 
 import java.util.List;
 
-public class PostService {
+public final class PostService {
 	private static final String BASE_URL = Configuration.BASE_POST_SERVICE_URL + "users/%s/posts";
 	private static final String DIRECT_BASE_URL = Configuration.BASE_POST_SERVICE_URL + "posts";
+
+	private PostService() {	}
 
 	public static CreateApi<Post> create(Long userId, Object post) {
 		return new CreateApi<Post>(BASE_URL, Post.class).withBody(post).withParentId(userId);

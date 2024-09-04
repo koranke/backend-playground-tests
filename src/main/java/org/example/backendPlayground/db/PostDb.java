@@ -7,7 +7,9 @@ import org.example.core.db.DbSession;
 
 import java.util.List;
 
-public class PostDb {
+public final class PostDb {
+
+	private PostDb() {	}
 
 	public static List<Post> getAll() {
 		try (SqlSession session = DbSession.getSession()) {
@@ -17,8 +19,7 @@ public class PostDb {
 
 	public static Post getById(long id) {
 		try (SqlSession session = DbSession.getSession()) {
-			Post post = session.getMapper(PostMapper.class).getById(id);
-			return post;
+			return session.getMapper(PostMapper.class).getById(id);
 		}
 	}
 

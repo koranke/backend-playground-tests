@@ -3,7 +3,7 @@ package org.example.core.utilities;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class ScenarioCore {
+public abstract class ScenarioCore {
     protected boolean needsDefaultValuesPopulated = true;
 
     protected <T> T getNonNull(T itemDefault, T itemOptional) {

@@ -2,7 +2,9 @@ package org.example.core.utilities;
 
 import java.util.concurrent.TimeUnit;
 
-public class SystemHelper {
+public final class SystemHelper {
+
+	private SystemHelper() {	}
 
 	public static void sleep(long milliseconds) {
 		try {

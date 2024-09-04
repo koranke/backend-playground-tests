@@ -7,7 +7,9 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
 
-public class UserDb {
+public final class UserDb {
+
+	private UserDb() {	}
 
 	public static List<User> getAll() {
 		try (SqlSession session = DbSession.getSession()) {
