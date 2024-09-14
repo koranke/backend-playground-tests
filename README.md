@@ -96,8 +96,8 @@ User user = UserScenario.create();
 Example overriding default and random values
 ```java
 User user = UserScenario
-        .withUsername("J.J.Jones")
-        .withPassword("myPassword")
-        .withNumberOfPosts(1)
-		.create();
+    .withUsername("J.J.Jones")
+    .withPassword("myPassword")
+    .withNumberOfPosts(1)
+    .create();
 ```
