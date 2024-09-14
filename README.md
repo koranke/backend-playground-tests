@@ -17,12 +17,87 @@ you can run these tests directly in your IDE, or through the command line using 
 mvn clean test
 ```
 
-## Features
-* TestNG for test execution and reporting.
-* Logging with Log4j.  Each run generates a new log file in the `logs` directory.  Prior logs are archived.
+## Technologies
+* TestNG for test execution and basic reporting.
+* Allure for more detailed reporting.
+* Log4j for logging.  Each run generates a new log file in the `logs` directory.  Prior logs are archived.
 Logs older than 3 days are automatically cleaned up.
-* Configuration management with the "Owner" library.  This library allows for easy reference and management of configuration properties.
-* Database access with MyBatis, including Db classes for grouping database access methods per data entity.
-* API wrapper classes for easy, flexible access to API endpoints.  Includes "call" and "tryCall" variations for each endpoint,
-allowing for simpler calling of endpoints expected to succeed and more complex handling of endpoints that may return errors.
-* Data scenario classes for easy setup of test data and verification of expected results.
+* "Owner" library for configuration management.  This library allows for easy reference and management of configuration properties.
+* Mybatis for SQL database access, including Db classes for grouping database access methods per data entity.
+* RestAssured for the API client.
+* AssertJ for more readable and powerful assertions.
+* Lombok for reducing boilerplate code.
+
+## Design Considerations
+The goal of any automation framework should be to minimize the cost of writing, running and maintaining tests.
+It is not enough to simply have standard features like logging, a database access layer and an API wrapper.  If 
+components are not
+designed properly, if they do not sufficiently handle the underlying complexity of the system, if they are not flexible
+enough to be both easy to use and at the same time powerful enough to handle the most complex test scenarios, then the
+tests that utilize the framework will be more complex than needed and the framework itself may be subject to increasingly
+disjointed updates and additions, leading to a more difficult framework to use and maintain.
+Other considerations include discoverability, reliability and speed of execution.
+
+One design approach that can help with flexibility and complexity is to use a "configuration" style approach for features as
+opposed to a more procedural approach.  Features can be expressed as objects with configuration properties that can be
+set to control behavior.  This allows for a more declarative style of test writing, where the tests
+can focus on the "what" of the test and not the "how".  This can lead to more readable tests that are easier to
+maintain and understand.
+
+Two examples of this approach in this project are the "Api" classes and the "DataScenario" classes.
+
+### Api Classes
+All endpoints are exposed as objects with configuration for the standard parameters of an API call.  Default values
+can be set per endpoint, and these defaults can be overridden by the test.  Tests have two needs when
+making an API call: 1) to test the endpoint, and 2) to use the endpoint as part of data scenario setup or verification.
+There are two core methods that support these needs: "call" and "tryCall".  The "call" method is used when the test
+expects the call to succeed.  It automatically verifies the expected response code and returns the
+deserialized response body.   The "tryCall" method is used when the test expects the call to fail or when the test
+needs access to the "Response" object for more complex handling.
+
+Call Example:
+```java
+User user = UserService.getById("1").call();
+```
+
+TryCall Example:
+```java
+Response response = UserService.getById("1").tryCall()
+    .then()
+    .statusCode(200)
+    .extract().response();
+```
+
+Example of configuring an endpoint:
+```java
+User user = UserService.getById("1")
+        .withHeader("Authorization", "Bearer " + token)
+        .call();
+```
+
+### Data Scenario Classes
+Data scenario classes are the main means of modeling the complexity of the application under test, 
+centralizing business logic and workflows while hiding the details
+from the test itself.  They are used to set up test data and can also be used to help verify expected results.
+Data scenarios are focused around business entities and the relationships between them.  One data scenario can
+have one or more child data scenarios, which can be used to model complex workflows.  Data scenarios can be
+configured with default values, which can be overridden by the test.  Since a data scenario "knows" about all
+the data details behind a particular scenario, it can be used to help verify expected results.  Data scenarios can
+also be used to transform data into different formats, such as converting a list of entities into a map for
+easier access or returning the data as a JSON string or as a POJO.
+The beauty of data scenarios is that they can be as simple or complex as needed within a test.  They can be a single line
+of code or can be a series of configurations.
+
+Example using default and random values
+```java
+User user = UserScenario.create();
+```
+
+Example overriding default and random values
+```java
+User user = UserScenario
+        .withUsername("J.J.Jones")
+        .withPassword("myPassword")
+        .withNumberOfPosts(1)
+		.create();
+```
