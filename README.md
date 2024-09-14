@@ -90,12 +90,12 @@ of code or can be a series of configurations.
 
 Example using default and random values
 ```java
-User user = UserScenario.create();
+User user = new UserScenario().create();
 ```
 
 Example overriding default and random values
 ```java
-User user = UserScenario
+User user = new UserScenario()
     .withUsername("J.J.Jones")
     .withPassword("myPassword")
     .withNumberOfPosts(1)
