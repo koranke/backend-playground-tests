@@ -6,18 +6,6 @@ import java.lang.reflect.Type;
 
 public class GetSingleApi<T> extends ApiBase<GetSingleApi<T>> {
 	private final Type resultType;
-	private String parentId;
-	private String id;
-
-	public GetSingleApi<T> withParentId(Long parentId) {
-		this.parentId = parentId.toString();
-		return this;
-	}
-
-	public GetSingleApi<T> withId(Long id) {
-		this.id = id.toString();
-		return this;
-	}
 
 	public GetSingleApi(String baseUrl, Type type) {
 		this.baseUrl = baseUrl;

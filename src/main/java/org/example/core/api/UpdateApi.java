@@ -6,22 +6,10 @@ import java.lang.reflect.Type;
 
 public class UpdateApi<T> extends ApiBase<UpdateApi<T>> {
 	private final Type resultType;
-	private String id;
-	private String parentId;
 	private Object body;
 
 	public UpdateApi<T> withBody(Object body) {
 		this.body = body;
-		return this;
-	}
-
-	public UpdateApi<T> withParentId(Long parentId) {
-		this.parentId = parentId.toString();
-		return this;
-	}
-
-	public UpdateApi<T> withId(Long id) {
-		this.id = id.toString();
 		return this;
 	}
 

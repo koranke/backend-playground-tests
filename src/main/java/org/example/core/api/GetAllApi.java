@@ -7,12 +7,6 @@ import java.util.List;
 
 public class GetAllApi<T> extends ApiBase<GetAllApi<T>> {
 	private final Type resultType;
-	private String parentId;
-
-	public GetAllApi<T> withParentId(Long parentId) {
-		this.parentId = parentId.toString();
-		return this;
-	}
 
 	public GetAllApi(String baseUrl, Type type) {
 		this.baseUrl = baseUrl;

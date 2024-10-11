@@ -6,13 +6,7 @@ import java.lang.reflect.Type;
 
 public class CreateApi<T> extends ApiBase<CreateApi<T>> {
 	private final Type resultType;
-	private String parentId;
 	private Object body;
-
-	public CreateApi<T> withParentId(Long parentId) {
-		this.parentId = parentId.toString();
-		return this;
-	}
 
 	public CreateApi<T> withBody(Object body) {
 		this.body = body;

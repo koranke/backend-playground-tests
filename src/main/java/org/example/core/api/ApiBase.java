@@ -17,6 +17,23 @@ public abstract class ApiBase<T> {
 	protected AuthType authType;
 	protected Map<String, String> headers;
 	protected Map<String, String> queryParameters;
+	protected String parentId;
+	protected String id;
+
+	public T withParentId(Long parentId) {
+		this.parentId = parentId.toString();
+		return (T) this;
+	}
+
+	public T withId(Long id) {
+		this.id = id.toString();
+		return (T) this;
+	}
+
+	public T withId(String id) {
+		this.id = id;
+		return (T) this;
+	}
 
 	public T withQueryParameter(String key, String value) {
 		if (queryParameters == null) {
