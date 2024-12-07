@@ -1,16 +1,21 @@
 package org.example.core.api;
 
-import io.qameta.allure.restassured.AllureRestAssured;
-import org.example.enums.AuthType;
 import com.google.gson.Gson;
+import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.example.enums.AuthType;
 
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 
-public abstract class ApiBase<T> {
+public abstract class ApiEndpoint<T> {
 	private RequestSpecification requestSpecification;
 	protected String baseUrl;
+	protected Method method = Method.GET;
+	protected int successStatusCode = 200;
 	protected String contentType = "application/json; charset=UTF-8";
 	protected String accept;
 	protected String authorization;
@@ -19,6 +24,45 @@ public abstract class ApiBase<T> {
 	protected Map<String, String> queryParameters;
 	protected String parentId;
 	protected String id;
+	protected Object body;
+	protected Type resultType;
+
+	public ApiEndpoint(String baseUrl, Type type) {
+		this.baseUrl = baseUrl;
+		this.resultType = type;
+	}
+
+	protected T callSingle() {
+		return tryCall()
+				.then()
+				.statusCode(successStatusCode)
+				.extract()
+				.as(resultType);
+	}
+
+	protected List<T> callList() {
+		return tryCall()
+				.then()
+				.statusCode(successStatusCode)
+				.extract()
+				.as(resultType);
+	}
+
+	protected Response callEmpty() {
+		return tryCall()
+				.then()
+				.statusCode(successStatusCode)
+				.extract()
+				.response();
+	}
+
+	public Response tryCall() {
+		if (parentId != null && !parentId.isEmpty()) {
+			baseUrl = String.format(baseUrl, parentId);
+		}
+		return call(id);
+	}
+
 
 	public T withParentId(Long parentId) {
 		this.parentId = parentId.toString();
@@ -76,29 +120,34 @@ public abstract class ApiBase<T> {
 		return (T) this;
 	}
 
-	protected Response get(String endpoint) {
-		configureClient();
-		endpoint = formatEndpoint(endpoint);
-		return requestSpecification.get(baseUrl + endpoint);
+	public T withMethod(Method value) {
+		method = value;
+		return (T) this;
 	}
 
-	protected Response post(String endpoint, Object body) {
-		String bodyString = getBodyString(body);
-		configureClient();
-		return requestSpecification.body(bodyString).post(baseUrl + endpoint);
+	public T withSuccessStatusCode(int value) {
+		successStatusCode = value;
+		return (T) this;
 	}
 
-	protected Response put(String endpoint, Object body) {
-		endpoint = formatEndpoint(endpoint);
-		String bodyString = getBodyString(body);
-		configureClient();
-		return requestSpecification.body(bodyString).put(baseUrl + endpoint);
+	public T withBody(Object body) {
+		this.body = body;
+		return (T) this;
 	}
 
-	protected Response delete(String endpoint) {
-		endpoint = formatEndpoint(endpoint);
+	public T withResultType(Type type) {
+		this.resultType = type;
+		return (T) this;
+	}
+
+	protected Response call(String endpoint) {
 		configureClient();
-		return requestSpecification.delete(baseUrl + endpoint);
+		endpoint = formatEndpoint(endpoint);
+		if (body != null) {
+			String bodyString = getBodyString(body);
+			requestSpecification.body(bodyString);
+		}
+		return requestSpecification.request(method, baseUrl + endpoint);
 	}
 
 	private void configureClient() {
