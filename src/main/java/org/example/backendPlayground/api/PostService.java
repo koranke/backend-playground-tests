@@ -1,12 +1,11 @@
 package org.example.backendPlayground.api;
 
 import com.google.gson.reflect.TypeToken;
+import io.restassured.http.Method;
 import org.example.backendPlayground.domain.Post;
-import org.example.core.api.CreateApi;
-import org.example.core.api.DeleteApi;
-import org.example.core.api.GetAllApi;
-import org.example.core.api.GetSingleApi;
-import org.example.core.api.UpdateApi;
+import org.example.core.api.ReturnList;
+import org.example.core.api.ReturnNone;
+import org.example.core.api.ReturnSingle;
 import org.example.core.configuration.Configuration;
 
 import java.util.List;
@@ -17,25 +16,35 @@ public final class PostService {
 
 	private PostService() {	}
 
-	public static CreateApi<Post> create(Long userId, Object post) {
-		return new CreateApi<Post>(BASE_URL, Post.class).withBody(post).withParentId(userId);
-	}
-
-	public static GetSingleApi<Post> getById(Long id) {
-		return new GetSingleApi<Post>(DIRECT_BASE_URL, Post.class).withId(id);
-	}
-
-	public static GetAllApi<Post> getAllForUser(Long userId) {
-		return new GetAllApi<Post>(BASE_URL, TypeToken.getParameterized(List.class, Post.class).getType())
+	public static ReturnSingle<Post> create(Long userId, Object post) {
+		return new ReturnSingle<>(BASE_URL, Post.class)
+				.withMethod(Method.POST)
+				.withBody(post)
 				.withParentId(userId);
 	}
 
-	public static UpdateApi<Post> update(Long userId, Long postId, Post post) {
-		return new UpdateApi<Post>(BASE_URL, Post.class).withParentId(userId).withId(postId).withBody(post);
+	public static ReturnSingle<Post> getById(Long id) {
+		return new ReturnSingle<>(DIRECT_BASE_URL, Post.class)
+				.withId(id);
 	}
 
-	public static DeleteApi delete(Long userId, Long postId) {
-		return new DeleteApi(BASE_URL).withParentId(userId).withId(postId);
+	public static ReturnList<Post> getAllForUser(Long userId) {
+		return new ReturnList<Post>(BASE_URL, TypeToken.getParameterized(List.class, Post.class).getType())
+				.withParentId(userId);
+	}
+
+	public static ReturnSingle<Post> update(Long userId, Long postId, Post post) {
+		return new ReturnSingle<>(BASE_URL, Post.class).withParentId(userId)
+				.withMethod(Method.PUT)
+				.withId(postId)
+				.withBody(post);
+	}
+
+	public static ReturnNone<Post> delete(Long userId, Long postId) {
+		return new ReturnNone<Post>(BASE_URL)
+				.withMethod(Method.DELETE)
+				.withParentId(userId)
+				.withId(postId);
 	}
 
 }
