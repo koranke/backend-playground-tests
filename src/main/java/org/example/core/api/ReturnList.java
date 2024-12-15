@@ -5,12 +5,12 @@ import java.util.List;
 
 public class ReturnList<T> extends ApiEndpoint<ReturnList<T>> {
 
-	public ReturnList(String baseUrl, Type resultType) {
-		super(baseUrl, resultType);
+	public ReturnList(Type resultType) {
+		super(resultType);
 	}
 
 	public List<T> call() {
-		return (List<T>) this.callList();
+		return (List<T>) this.callGetList();
 	}
 
 }

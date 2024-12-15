@@ -11,40 +11,51 @@ import org.example.core.configuration.Configuration;
 import java.util.List;
 
 public final class PostService {
-	private static final String BASE_URL = Configuration.BASE_POST_SERVICE_URL + "users/%s/posts";
-	private static final String DIRECT_BASE_URL = Configuration.BASE_POST_SERVICE_URL + "posts";
+	private static final String BASE_URL = Configuration.BASE_POST_SERVICE_URL + "users/{userId}/posts";
+	private static final String BY_ID_URL = Configuration.BASE_POST_SERVICE_URL + "users/{userId}/posts/{postId}";
+	private static final String DIRECT_BASE_URL = Configuration.BASE_POST_SERVICE_URL + "posts/{postId}";
+	private static final String userIdKey = "userId";
+	private static final String postIdKey = "postId";
+
 
 	private PostService() {	}
 
 	public static ReturnSingle<Post> create(Long userId, Object post) {
-		return new ReturnSingle<>(BASE_URL, Post.class)
+		return new ReturnSingle<>(Post.class)
+				.withEndpointUrl(BASE_URL)
 				.withMethod(Method.POST)
 				.withBody(post)
-				.withParentId(userId);
+				.withPathParameter(userIdKey, userId.toString());
 	}
 
 	public static ReturnSingle<Post> getById(Long id) {
-		return new ReturnSingle<>(DIRECT_BASE_URL, Post.class)
-				.withId(id);
+		return new ReturnSingle<>(Post.class)
+				.withEndpointUrl(DIRECT_BASE_URL)
+				.withPathParameter(postIdKey, id.toString());
 	}
 
 	public static ReturnList<Post> getAllForUser(Long userId) {
-		return new ReturnList<Post>(BASE_URL, TypeToken.getParameterized(List.class, Post.class).getType())
-				.withParentId(userId);
+		return new ReturnList<Post>(TypeToken.getParameterized(List.class, Post.class).getType())
+				.withEndpointUrl(BASE_URL)
+				.withPathParameter(userIdKey, userId.toString());
 	}
 
 	public static ReturnSingle<Post> update(Long userId, Long postId, Post post) {
-		return new ReturnSingle<>(BASE_URL, Post.class).withParentId(userId)
+		return new ReturnSingle<>(Post.class)
+				.withEndpointUrl(BY_ID_URL)
 				.withMethod(Method.PUT)
-				.withId(postId)
+				.withPathParameter(userIdKey, userId.toString())
+				.withPathParameter(postIdKey, postId.toString())
 				.withBody(post);
 	}
 
 	public static ReturnNone<Post> delete(Long userId, Long postId) {
-		return new ReturnNone<Post>(BASE_URL)
+		return new ReturnNone<Post>()
+				.withEndpointUrl(BY_ID_URL)
 				.withMethod(Method.DELETE)
-				.withParentId(userId)
-				.withId(postId);
+				.withPathParameter(userIdKey, userId.toString())
+				.withPathParameter(postIdKey, postId.toString())
+				;
 	}
 
 }
