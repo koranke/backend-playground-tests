@@ -4,12 +4,12 @@ import io.restassured.response.Response;
 
 public class ReturnNone<T> extends ApiEndpoint<ReturnNone<T>> {
 
-	public ReturnNone(String baseUrl) {
-		super(baseUrl, null);
+	public ReturnNone() {
+		super(null);
 	}
 
 	public Response call() {
-		return this.callEmpty();
+		return this.callGetResponse();
 	}
 
 }

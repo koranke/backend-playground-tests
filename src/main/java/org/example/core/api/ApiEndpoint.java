@@ -13,69 +13,61 @@ import java.util.Map;
 
 public abstract class ApiEndpoint<T> {
 	private RequestSpecification requestSpecification;
-	protected String baseUrl;
+	protected String endpointUrl;
 	protected Method method = Method.GET;
-	protected int successStatusCode = 200;
+	protected int expectedStatusCode = 200;
 	protected String contentType = "application/json; charset=UTF-8";
 	protected String accept;
 	protected String authorization;
 	protected AuthType authType;
 	protected Map<String, String> headers;
+	protected Map<String, String> pathParameters;
 	protected Map<String, String> queryParameters;
-	protected String parentId;
-	protected String id;
 	protected Object body;
 	protected Type resultType;
 
-	public ApiEndpoint(String baseUrl, Type type) {
-		this.baseUrl = baseUrl;
+	public ApiEndpoint(Type type) {
 		this.resultType = type;
 	}
 
-	protected T callSingle() {
+	protected T callGetSingle() {
 		return tryCall()
 				.then()
-				.statusCode(successStatusCode)
+				.statusCode(expectedStatusCode)
 				.extract()
 				.as(resultType);
 	}
 
-	protected List<T> callList() {
+	protected List<T> callGetList() {
 		return tryCall()
 				.then()
-				.statusCode(successStatusCode)
+				.statusCode(expectedStatusCode)
 				.extract()
 				.as(resultType);
 	}
 
-	protected Response callEmpty() {
+	protected Response callGetResponse() {
 		return tryCall()
 				.then()
-				.statusCode(successStatusCode)
+				.statusCode(expectedStatusCode)
 				.extract()
 				.response();
 	}
 
 	public Response tryCall() {
-		if (parentId != null && !parentId.isEmpty()) {
-			baseUrl = String.format(baseUrl, parentId);
+		configureClient();
+		if (body != null) {
+			String bodyString = getBodyString(body);
+			requestSpecification.body(bodyString);
 		}
-		return call(id);
+		return requestSpecification.request(method, endpointUrl);
 	}
 
-
-	public T withParentId(Long parentId) {
-		this.parentId = parentId.toString();
-		return (T) this;
-	}
-
-	public T withId(Long id) {
-		this.id = id.toString();
-		return (T) this;
-	}
-
-	public T withId(String id) {
-		this.id = id;
+	public T withPathParameter(String key, String value) {
+		if (pathParameters == null) {
+			pathParameters = new java.util.HashMap<>();
+		}
+		pathParameters.put(key, value);
 		return (T) this;
 	}
 
@@ -115,8 +107,8 @@ public abstract class ApiEndpoint<T> {
 		return (T) this;
 	}
 
-	public T withBaseUrl(String value) {
-		baseUrl = value;
+	public T withEndpointUrl(String value) {
+		endpointUrl = value;
 		return (T) this;
 	}
 
@@ -125,8 +117,8 @@ public abstract class ApiEndpoint<T> {
 		return (T) this;
 	}
 
-	public T withSuccessStatusCode(int value) {
-		successStatusCode = value;
+	public T withExpectedStatusCode(int value) {
+		expectedStatusCode = value;
 		return (T) this;
 	}
 
@@ -140,16 +132,6 @@ public abstract class ApiEndpoint<T> {
 		return (T) this;
 	}
 
-	protected Response call(String endpoint) {
-		configureClient();
-		endpoint = formatEndpoint(endpoint);
-		if (body != null) {
-			String bodyString = getBodyString(body);
-			requestSpecification.body(bodyString);
-		}
-		return requestSpecification.request(method, baseUrl + endpoint);
-	}
-
 	private void configureClient() {
 		requestSpecification = io.restassured.RestAssured.given();
 		requestSpecification.filters(
@@ -158,7 +140,6 @@ public abstract class ApiEndpoint<T> {
 				new io.restassured.filter.log.ErrorLoggingFilter(),
 				new AllureRestAssured()
 		);
-		requestSpecification.baseUri(baseUrl);
 		if (authorization != null) {
 			configureAuthorization();
 		}
@@ -170,6 +151,9 @@ public abstract class ApiEndpoint<T> {
 		}
 		if (headers != null) {
 			requestSpecification.headers(headers);
+		}
+		if (pathParameters != null) {
+			requestSpecification.pathParams(pathParameters);
 		}
 		if (queryParameters != null) {
 			requestSpecification.queryParams(queryParameters);
@@ -184,16 +168,6 @@ public abstract class ApiEndpoint<T> {
 		} else {
 			throw new IllegalArgumentException("Unsupported authorization type");
 		}
-	}
-
-	private static String formatEndpoint(String endpoint) {
-		if (endpoint == null) {
-			endpoint = "";
-		}
-		if (!endpoint.isEmpty() && !endpoint.startsWith("/")) {
-			endpoint = "/" + endpoint;
-		}
-		return endpoint;
 	}
 
 	private static String getBodyString(Object body) {
