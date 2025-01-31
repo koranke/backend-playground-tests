@@ -1,13 +1,15 @@
 package org.example.core.api;
 
-public class ReturnSingle<T> extends ApiEndpoint<ReturnSingle<T>> {
+import io.restassured.http.Method;
 
-	public ReturnSingle(Class<T> resultType) {
-		super(resultType);
+public class ReturnSingle<T> extends ApiEndpoint<ReturnSingle<T>, T> {
+
+	public ReturnSingle(Method method, String endpointUrl, Class<T> resultType) {
+		super(method, endpointUrl, resultType);
 	}
 
 	public T call() {
-		return (T) this.callGetSingle();
+		return this.callGetSingle();
 	}
 
 }
