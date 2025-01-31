@@ -11,10 +11,10 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ApiEndpoint<T> {
+public abstract class ApiEndpoint<T extends ApiEndpoint<T, R>, R> {
 	private RequestSpecification requestSpecification;
 	protected String endpointUrl;
-	protected Method method = Method.GET;
+	protected Method method;
 	protected int expectedStatusCode = 200;
 	protected String contentType = "application/json; charset=UTF-8";
 	protected String accept;
@@ -26,11 +26,13 @@ public abstract class ApiEndpoint<T> {
 	protected Object body;
 	protected Type resultType;
 
-	public ApiEndpoint(Type type) {
+	public ApiEndpoint(Method method, String endpointUrl, Type type) {
+		this.method = method;
+		this.endpointUrl = endpointUrl;
 		this.resultType = type;
 	}
 
-	protected T callGetSingle() {
+	protected R callGetSingle() {
 		return tryCall()
 				.then()
 				.statusCode(expectedStatusCode)
@@ -38,7 +40,7 @@ public abstract class ApiEndpoint<T> {
 				.as(resultType);
 	}
 
-	protected List<T> callGetList() {
+	protected List<R> callGetList() {
 		return tryCall()
 				.then()
 				.statusCode(expectedStatusCode)
@@ -161,10 +163,8 @@ public abstract class ApiEndpoint<T> {
 	}
 
 	private void configureAuthorization() {
-		if (authType == AuthType.BEARER) {
+		if (authType == AuthType.BEARER || authType == AuthType.BASIC) {
 			withHeader("Authorization", String.format("%s %s", authType.getValue(), authorization));
-		} else if (authType == AuthType.BASIC) {
-			requestSpecification.auth().preemptive().basic(authorization, "");
 		} else {
 			throw new IllegalArgumentException("Unsupported authorization type");
 		}

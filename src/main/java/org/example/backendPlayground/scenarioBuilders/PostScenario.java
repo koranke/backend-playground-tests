@@ -18,7 +18,7 @@ public class PostScenario extends ScenarioCore {
 	public PostScenario withDefaults() {
 		if (this.needsDefaultValuesPopulated) {
 			this.postTitle = getNonNull(postTitle, RandomData.getRandomString(10));
-			this.postContent = getNonNull(postContent, RandomData.en.lorem().paragraph());
+			this.postContent = getNonNull(postContent, RandomData.en.lorem().paragraph(8));
 			this.postVisibility = getNonNull(postVisibility, PostVisibility.PUBLIC);
 		}
 

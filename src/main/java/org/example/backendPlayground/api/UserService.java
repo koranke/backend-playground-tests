@@ -15,35 +15,27 @@ public final class UserService {
 	private UserService() {	}
 
 	public static ReturnSingle<User> create(User user) {
-		return new ReturnSingle<>(User.class)
-				.withMethod(Method.POST)
-				.withEndpointUrl(BASE_URL)
+		return new ReturnSingle<>(Method.POST, BASE_URL, User.class)
 				.withBody(user);
 	}
 
 	public static ReturnSingle<User> getById(Long id) {
-		return new ReturnSingle<>(User.class)
-				.withEndpointUrl(BY_ID_URL)
+		return new ReturnSingle<>(Method.GET, BY_ID_URL, User.class)
 				.withPathParameter(userIdKey, id.toString());
 	}
 
 	public static ReturnSingle<PaginatedUserResponse> getAll() {
-		return new ReturnSingle<>(PaginatedUserResponse.class)
-				.withEndpointUrl(BASE_URL);
+		return new ReturnSingle<>(Method.GET, BASE_URL, PaginatedUserResponse.class);
 	}
 
 	public static ReturnSingle<User> update(Long id, User user) {
-		return new ReturnSingle<>(User.class)
-				.withEndpointUrl(BY_ID_URL)
-				.withMethod(Method.PUT)
+		return new ReturnSingle<>(Method.PUT, BY_ID_URL, User.class)
 				.withPathParameter(userIdKey, id.toString())
 				.withBody(user);
 	}
 
-	public static ReturnNone<User> delete(Long id) {
-		return new ReturnNone<User>()
-				.withEndpointUrl(BY_ID_URL)
-				.withMethod(Method.DELETE)
+	public static ReturnNone delete(Long id) {
+		return new ReturnNone(Method.DELETE, BY_ID_URL)
 				.withPathParameter(userIdKey, id.toString());
 	}
 
